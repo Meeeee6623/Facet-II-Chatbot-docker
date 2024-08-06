@@ -1,0 +1,67 @@
+name: open-webui-stack
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: langfuse_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: langfuse_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  langfuse:
+    image: langfuse/langfuse:2
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: langfuse_user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: langfuse_db
+      DATABASE_PORT: 5432
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: "secret"
+      SALT: "salt"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  pipelines:
+    build:
+      context: /Users/bchauhan/Downloads/pipelines
+      dockerfile: Dockerfile
+    image: pipelines:latest
+    depends_on:
+      - langfuse
+    ports:
+      - "9099:9099"
+    volumes:
+      - pipelines_data:/app/pipelines
+    restart: always
+    env_file:
+      - .env
+
+  open-webui:
+    build:
+        context: /Users/bchauhan/Downloads/open-webui
+        dockerfile: Dockerfile
+        args:
+          USE_CUDA: "false"
+    depends_on:
+      - pipelines
+    ports:
+      - "3001:8080"
+    volumes:
+      - ollama:/root/.ollama
+      - open-webui:/app/backend/data
+    restart: always
+
+volumes:
+  postgres_data:
+  pipelines_data:
+  ollama:
+  open-webui:
