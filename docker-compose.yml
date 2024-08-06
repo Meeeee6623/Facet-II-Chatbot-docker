@@ -59,6 +59,8 @@ services:
       - ollama
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
+      OPENAI_API_BASE_URL: http://pipelines:9099
+      OPENAI_API_KEY: 0p3n-w3bu!
     ports:
       - "3001:8080"
     volumes:
