@@ -1,4 +1,7 @@
-name: open-webui-stack
+include:
+  - path: ragflow/docker/docker-compose-gpu.yml
+
+name: facet-ii-chatbot
 
 services:
   postgres:
@@ -32,7 +35,7 @@ services:
 
   pipelines:
     build:
-      context: /Users/bchauhan/Downloads/pipelines
+      context: ./pipelines
       dockerfile: Dockerfile
     image: pipelines:latest
     depends_on:
@@ -47,17 +50,34 @@ services:
 
   open-webui:
     build:
-        context: /Users/bchauhan/Downloads/open-webui
+        context: ./open-webui
         dockerfile: Dockerfile
         args:
           USE_CUDA: "false"
     depends_on:
       - pipelines
+      - ollama
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
     ports:
       - "3001:8080"
     volumes:
-      - ollama:/root/.ollama
       - open-webui:/app/backend/data
+    restart: always
+
+  ollama:
+    image: ollama/ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
     restart: always
 
 volumes:
