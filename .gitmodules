@@ -1,0 +1,9 @@
+[submodule "ragflow"]
+	path = ragflow
+	url = git@github.com:Meeeee6623/ragflow.git
+[submodule "open-webui"]
+	path = open-webui
+	url = git@github.com:Meeeee6623/open-webui.git
+[submodule "pipelines"]
+	path = pipelines
+	url = git@github.com:Meeeee6623/pipelines.git
