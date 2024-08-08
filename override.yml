@@ -3,21 +3,21 @@ services:
     ports:
       - 8001:80
     networks:
-      default
+      - default
 
   es01:
     networks:
-      default
+      - default
 
   mysql:
     networks:
-      default
+      - default
 
   minio:
     networks:
-      default
+      - default
 
   redis:
     networks:
-      default
+      - default
 
