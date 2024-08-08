@@ -1,0 +1,23 @@
+services:
+  ragflow:
+    ports:
+      - 8001:80
+    networks:
+      default
+
+  es01:
+    networks:
+      default
+
+  mysql:
+    networks:
+      default
+
+  minio:
+    networks:
+      default
+
+  redis:
+    networks:
+      default
+

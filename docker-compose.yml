@@ -1,5 +1,6 @@
 include:
   - path: ragflow/docker/docker-compose-gpu.yml
+  - path: override.yml
 
 name: facet-ii-chatbot
 
